@@ -11,7 +11,7 @@ app.get("/", function (req, res) {
 });
 
 app.listen(8080, function () {
-  console.log("Príklad aplikácie počúva na porte 3000!");
+  console.log("Príklad aplikácie počúva na porte 8080!");
 });
 
 client.connect();
