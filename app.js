@@ -1,26 +1,15 @@
 const express = require("express");
 const app = express();
-const products = require("./routes/products");
-const client = require("./connection");
+const demosRouter = require("./routes/demos/index");
+require("dotenv").config();
 
 app.use(express.json());
-//app.use("/", products);
+app.use("/demos", demosRouter);
 
-app.get("/", function (req, res) {
+app.get("/", (req, res) => {
   res.send("Ahoj svet! Toto je tvoj pohreb.");
 });
 
-client.connect();
-
-app.get("/produkty", (req, res) => {
-  client.query(`Select * from products`, (err, result) => {
-    if (!err) {
-      res.send(result.rows);
-    }
-  });
-  client.end;
-});
-
-app.listen(8080, function () {
+app.listen(8080, () => {
   console.log("Príklad aplikácie počúva na porte 8080!");
 });

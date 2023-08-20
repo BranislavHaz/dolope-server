@@ -1,12 +1,12 @@
-const { Client } = require("pg");
+const db = require("mysql2-promise")();
 require("dotenv").config();
 
-const client = new Client({
+db.configure({
   host: process.env.HOST,
   user: process.env.USER,
-  port: process.env.PORT,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
+  port: process.env.PORT,
 });
 
-module.exports = client;
+module.exports = db;
