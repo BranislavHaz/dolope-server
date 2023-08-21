@@ -12,7 +12,7 @@ const insertToDB = async (product) => {
     if (existingProducts.length === 0) {
       // Vloženie nového produktu
       await db.query(
-        `INSERT INTO products_demos VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO products_demos VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           product.id,
           product.title,
@@ -22,13 +22,19 @@ const insertToDB = async (product) => {
           product.thickness,
           product.price_with_VAT_ks,
           product.price_with_VAT_m2,
+          product.availability,
         ]
       );
     } else {
       // Aktualizácia ceny existujúceho produktu
       await db.query(
-        `UPDATE products_demos SET price_with_VAT_ks = ? WHERE id = ?`,
-        [product.price_with_VAT_ks, product.id]
+        `UPDATE products_demos SET price_with_VAT_ks = ?, price_with_VAT_m2 = ?, availability = ? WHERE id = ?`,
+        [
+          product.price_with_VAT_ks,
+          product.price_with_VAT_m2,
+          product.availability,
+          product.id,
+        ]
       );
     }
   } catch (error) {
@@ -37,6 +43,7 @@ const insertToDB = async (product) => {
 };
 
 const productsInsertToDB = async (products) => {
+  await db.query("UPDATE products_demos SET availability = false");
   for (const product of products) {
     await insertToDB(product);
   }

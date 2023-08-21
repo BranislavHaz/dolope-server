@@ -1,4 +1,4 @@
-const { lastPageSelector } = require("../../variables/selectors");
+const { lastPageSelector } = require("../../variables/demos/selectors");
 
 // Získanie posledného čísla v paginatore
 const pagesGetLastNumber = async (page) => {
