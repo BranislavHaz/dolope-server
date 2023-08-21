@@ -5,8 +5,8 @@ const nabykovRouter = require("./routes/nabykov");
 require("dotenv").config();
 
 app.use(express.json());
-//app.use("/demos", demosRouter);
-//app.use("/nabykov", nabykovRouter);
+app.use("/demos", demosRouter);
+app.use("/nabykov", nabykovRouter);
 
 app.get("/", (req, res) => {
   res.send("Ahoj svet! Toto je tvoj pohreb.");
