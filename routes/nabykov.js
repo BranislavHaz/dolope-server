@@ -11,14 +11,14 @@ router.get("/", (req, res) => {
   res.status(200).json({ message: "Nabykov API" });
 });
 
-router.get("/scrapping", async (req, res) => {
+/* router.get("/scrapping", async (req, res) => {
   try {
     await startScrapping();
     res.status(200).json({ message: "Nabykov Scrapping is done..." });
   } catch (err) {
     res.status(400).json({ message: err });
   }
-});
+}); */
 
 router.get("/products", async (req, res) => {
   try {
