@@ -21,7 +21,6 @@ router.get("/scrapping", async (req, res) => {
 });
 
 router.get("/products", async (req, res) => {
-  const products = await productsGetFromDB();
   try {
     const products = await productsGetFromDB();
     res.json(products);
