@@ -8,8 +8,7 @@ const {
 
 const productsExtractFromWeb = async (page) => {
   console.log("Spustenie - productsExtractFromWeb");
-  await page.content();
-  //await page.waitForSelector(priceSelector, { timeout: 190000 });
+  // await page.waitForSelector(priceSelector, { timeout: 190000 });
 
   // Extrahujte produkty na aktuální stránce
   const products = await page.evaluate(
