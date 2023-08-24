@@ -15,6 +15,7 @@ router.get("/", (req, res) => {
 router.get("/scrape", async (req, res) => {
   try {
     await startScrapping();
+    // temp
     await sendErrorEmail("Nabykov", {
       errMessage: "toto je error",
       test: "Len testujem aj toto",
