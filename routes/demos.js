@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
   res.status(200).json({ message: "Demos API" });
 });
 
-/* router.get("/scrapping", async (req, res) => {
+router.get("/scrape", async (req, res) => {
   try {
     await startScrapping();
     res.status(200).json({ message: "everything is right" });
@@ -27,6 +27,6 @@ router.get("/products", async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err });
   }
-}); */
+});
 
 module.exports = router;

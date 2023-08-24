@@ -1,29 +1,32 @@
 // Vloženie nového produktu, alebo aktualizácia stávajúceho produktu do databázy
-const db = require("../../connection");
+const pool = require("../../connectDB");
 
 const insertToDB = async (product) => {
   try {
     // Kontrola, či produkt s daným ID už existuje
-    const [existingProducts] = await db.query(
-      `SELECT * FROM products_nabykov WHERE id = ?`,
-      [product.id]
-    );
+    const existingProducts = await pool.query({
+      text: `SELECT * FROM products_nabykov WHERE id = $1`,
+      values: [product.id],
+    });
 
-    if (existingProducts.length === 0) {
+    if (existingProducts.rows.length === 0) {
       // Vloženie nového produktu
-      await db.query(`INSERT INTO products_nabykov VALUES (?, ?, ?, ?, ?)`, [
-        product.id,
-        product.title,
-        product.price_with_VAT,
-        product.availability,
-        product.product_url,
-      ]);
+      await pool.query({
+        text: `INSERT INTO products_nabykov(id, title, price_with_VAT, availability, product_url) VALUES($1, $2, $3, $4, $5)`,
+        values: [
+          product.id,
+          product.title,
+          product.price_with_VAT,
+          product.availability,
+          product.product_url,
+        ],
+      });
     } else {
       // Aktualizácia ceny existujúceho produktu
-      await db.query(
-        `UPDATE products_nabykov SET price_with_VAT= ?, vailability = ? WHERE id = ?`,
-        [product.price_with_VAT, product.availability, product.id]
-      );
+      await pool.query({
+        text: `UPDATE products_nabykov SET price_with_VAT= $1, availability = $2 WHERE id = $3`,
+        values: [product.price_with_VAT, product.availability, product.id],
+      });
     }
   } catch (error) {
     console.error("Chyba pri spracovaní databázy:", error);
@@ -31,9 +34,10 @@ const insertToDB = async (product) => {
 };
 
 const productsInsertToDB = async (products) => {
-  await db.query("UPDATE products_nabykov SET availability = false");
+  await pool.query({
+    text: "UPDATE products_nabykov SET availability = false",
+  });
   for (const product of products) {
-    console.log(product);
     await insertToDB(product);
   }
 };

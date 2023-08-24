@@ -1,3 +1,4 @@
+const getExchangeRate = require("./getExchangeRate");
 const {
   productListSelector,
   titleSelector,
@@ -10,9 +11,12 @@ const productsExtractFromWeb = async (page) => {
   console.log("Spustenie - productsExtractFromWeb");
   await page.waitForSelector(priceSelector, { timeout: 60000 });
 
+  const exchangeRate = await getExchangeRate();
+
   // Extrahujte produkty na aktuální stránce
   const products = await page.evaluate(
     (
+      exchangeRate,
       productListSelector,
       titleSelector,
       priceSelector,
@@ -27,18 +31,15 @@ const productsExtractFromWeb = async (page) => {
         const priceElement = element.querySelector(priceSelector);
         const availabilityElement = element.querySelector(availabilitySelector);
         const productUrlElement = element.querySelector(productUrlSelector);
-
-        //const id = idElement.textContent.trim();
         const title = titleElement.title;
         const availability =
           availabilityElement.innerText === "Skladom" ? true : false;
 
-        const price =
-          Math.round(
-            parseFloat(
-              priceElement.innerText.replace(/[^0-9.,]/g, "").replace(",", ".")
-            ) * 100
-          ) / 100;
+        const rawPrice = parseFloat(
+          priceElement.innerText.replace(/[^0-9.,]/g, "").replace(",", ".")
+        );
+
+        const price = Math.ceil(rawPrice * exchangeRate * 100) / 100;
 
         const url = productUrlElement.href;
 
@@ -52,6 +53,7 @@ const productsExtractFromWeb = async (page) => {
 
       return products;
     },
+    exchangeRate,
     productListSelector,
     titleSelector,
     priceSelector,

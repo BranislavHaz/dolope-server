@@ -1,12 +1,9 @@
-const db = require("../../connection");
+const pool = require("../../connectDB");
 
 const getAllProductsFromDatabase = async () => {
-  try {
-    const [products] = await db.query(`SELECT * FROM products_demos`);
-    return products;
-  } catch (error) {
-    throw error;
-  }
+  const queryText = "SELECT * FROM products_demos";
+  const { rows } = await pool.query(queryText);
+  return rows;
 };
 
 module.exports = getAllProductsFromDatabase;
