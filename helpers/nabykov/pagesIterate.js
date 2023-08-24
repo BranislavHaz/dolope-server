@@ -20,7 +20,11 @@ async function iteratePages(page) {
 
     return allProducts;
   } catch (err) {
-    throw err;
+    if (err) {
+      throw err;
+    } else {
+      throw new Error("Chyba vo funkcií iteratePages()");
+    }
   }
 }
 
