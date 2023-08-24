@@ -29,16 +29,20 @@ const insertToDB = async (product) => {
       });
     }
   } catch (error) {
-    console.error("Chyba pri spracovaní databázy:", error);
+    throw new Error("Chyba vo funkcií insertToDB()");
   }
 };
 
 const productsInsertToDB = async (products) => {
-  await pool.query({
-    text: "UPDATE products_nabykov SET availability = false",
-  });
-  for (const product of products) {
-    await insertToDB(product);
+  try {
+    await pool.query({
+      text: "UPDATE products_nabykov SET availability = false",
+    });
+    for (const product of products) {
+      await insertToDB(product);
+    }
+  } catch (err) {
+    throw err;
   }
 };
 

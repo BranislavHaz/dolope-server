@@ -26,7 +26,7 @@ router.get("/scrape", async (req, res) => {
     await sendErrorEmail("Demos");
     res.status(200).json({ message: "Nabykov scrapping is done..." });
   } catch (err) {
-    res.status(400).json({ message: err });
+    res.json({ chyba: err });
   }
 });
 
