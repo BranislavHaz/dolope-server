@@ -21,22 +21,14 @@ router.get("/mail", async (req, res) => {
 //
 
 router.get("/scrape", async (req, res) => {
-  try {
-    await startScrapping();
-    await sendErrorEmail("Demos");
-    res.status(200).json({ message: "Nabykov scrapping is done..." });
-  } catch (err) {
-    res.json({ chyba: err });
-  }
+  await startScrapping();
+  await sendErrorEmail("Demos");
+  res.status(200).json({ message: "Nabykov scrapping is done..." });
 });
 
 router.get("/products", async (req, res) => {
-  try {
-    const products = await productsGetFromDB();
-    res.json(products);
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
+  const products = await productsGetFromDB();
+  res.json(products);
 });
 
 module.exports = router;

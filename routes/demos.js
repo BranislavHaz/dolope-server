@@ -12,21 +12,13 @@ router.get("/", (req, res) => {
 });
 
 router.get("/scrape", async (req, res) => {
-  try {
-    await startScrapping();
-    res.status(200).json({ message: "everything is right" });
-  } catch (err) {
-    res.status(400).json({ err });
-  }
+  await startScrapping();
+  res.status(200).json({ message: "everything is right" });
 });
 
 router.get("/products", async (req, res) => {
-  try {
-    const products = await productsGetFromDB();
-    res.json(products);
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
+  const products = await productsGetFromDB();
+  res.json(products);
 });
 
 module.exports = router;
