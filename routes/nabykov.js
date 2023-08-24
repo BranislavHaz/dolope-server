@@ -12,14 +12,18 @@ router.get("/", (req, res) => {
   res.status(200).json({ message: "Nabykov API" });
 });
 
+//
+
+router.get("/mail", async (req, res) => {
+  sendErrorEmail("Demos");
+  res.json({ Message: "Hello" });
+});
+//
+
 router.get("/scrape", async (req, res) => {
   try {
     await startScrapping();
-    // temp
-    await sendErrorEmail("Nabykov", {
-      errMessage: "toto je error",
-      test: "Len testujem aj toto",
-    });
+    await sendErrorEmail("Demos");
     res.status(200).json({ message: "Nabykov scrapping is done..." });
   } catch (err) {
     res.status(400).json({ message: err });

@@ -1,17 +1,14 @@
-const getTransporter = require("../connectMailer");
+const transporter = require("../connectMailer");
 
-const sendErrorEmail = async (typeOfScraper, err = false) => {
-  const transporter = await getTransporter();
+const sendErrorEmail = async (type, err = false) => {
+  const error = err ? `Chyba: ${err}` : ``;
+
   await transporter.sendMail({
     from: '"Webscrapper" <dolope@dolope.cz>',
     to: "haz.branislav@gmail.com",
-    subject: `${typeOfScraper} scrapper - hlási chybu`,
-    text: `Ahoj, ${typeOfScraper} scrapper hlási chybu. ${
-      err ? `Chyba:  ${err}` : ``
-    }`,
-    html: `Ahoj, ${typeOfScraper} scrapper hlási chybu. <br> ${
-      err && `<strong>Chyba:</strong> ${err}`
-    }`,
+    subject: `${type} scrapper - hlási chybu`,
+    text: `Ahoj, ${type} scrapper hlási chybu. ${error}`,
+    html: `Ahoj, ${type} scrapper hlási chybu. ${error}`,
   });
 };
 
