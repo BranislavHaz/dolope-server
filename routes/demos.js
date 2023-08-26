@@ -2,10 +2,12 @@ const express = require("express");
 let router = express.Router();
 const app = express();
 
-const productsStartScrapping = require("../helpers/demos/grc_productsStartScrapping");
-const startScrapping = require("../helpers/demos/startScrapping");
+const startScraping = require("../helpers/demos/grc_startScraping");
+//const startScrapping = require("../helpers/demos/startScrapping");
 const productsGetFromDB = require("../helpers/demos/productsGetFromDB");
-const productsIterating = require("../helpers/demos/grc_productsIterating");
+const productsIterating = require("../helpers/demos/grc_startScraping");
+const insertToDB = require("../helpers/demos/insertToDB");
+const sendErrorEmail = require("../helpers/emailOnScrapingError");
 
 app.use(express.json());
 
@@ -19,10 +21,25 @@ router.get("/scrape", async (req, res) => {
 });
 
 router.get("/scrapping", async (req, res) => {
-  //const products = await productsStartScrapping();
-  //res.status(200).json({ products });
-  const products = await productsIterating("availability", "egger");
-  res.json(products);
+  try {
+    const manufacturer = req.query.manufacturer;
+    const type = req.query.type;
+
+    if (
+      (manufacturer === "egger" || manufacturer === "krono") &&
+      (type === "products" || type === "translations")
+    ) {
+      const products = await startScraping(manufacturer, type);
+      insertToDB(type, products);
+      res.status(200).json(products);
+    } else {
+      res
+        .status(400)
+        .json({ errMessage: "Zajte správne parametre pre scrapovanie." });
+    }
+  } catch (err) {
+    sendErrorEmail("Démos", err);
+  }
 });
 
 router.get("/products", async (req, res) => {

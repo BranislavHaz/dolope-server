@@ -1,13 +1,10 @@
 const {
   productsListSelector,
-  codeSelector,
   titleSelector,
-  priceSelector,
-  urlSelector,
   setSelector,
 } = require("../../variables/demosSelectors");
 
-const productsScrapeData = async ($) => {
+const scrapeTranslations = async ($) => {
   const scrappedProducts = [];
 
   $(productsListSelector).each((index, element) => {
@@ -21,27 +18,14 @@ const productsScrapeData = async ($) => {
     const thicknessVerify = thickness === 10 || thickness === 18 ? true : false;
 
     if (setVerify && thicknessVerify) {
-      const id = Number(el.find(codeSelector).text().trim());
-      console.log(id);
       const idManufacturer = title.split(" ")[1];
-      const name = title.split(" ").slice(3, -1).join(" ");
       const label = title.split(" ")[2];
-      //const thickness = Number(title.match(/\/(\d+)$/)[1]);
-      const priceText = el.find(priceSelector).text();
-      const price = Math.round(
-        priceText.replace(/[^0-9.,]/g, "").replace(",", ".")
-      );
-      const url = el.find(urlSelector).attr("href");
+      const nameCZ = title.split(" ").slice(3, -1).join(" ");
 
       const product = {
-        id,
-        title,
         idManufacturer,
-        name,
         label,
-        thickness,
-        price,
-        url,
+        nameCZ,
       };
 
       scrappedProducts.push(product);
@@ -53,4 +37,4 @@ const productsScrapeData = async ($) => {
   return scrappedProducts;
 };
 
-module.exports = productsScrapeData;
+module.exports = scrapeTranslations;
