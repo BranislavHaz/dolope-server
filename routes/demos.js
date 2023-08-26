@@ -4,7 +4,11 @@ const app = express();
 
 const startScraping = require("../helpers/demos/grc_startScraping");
 //const startScrapping = require("../helpers/demos/startScrapping");
-const productsGetFromDB = require("../helpers/demos/productsGetFromDB");
+const {
+  getAllProductsFromDB,
+  get10thicknessProductsFromDB,
+  get18thicknessProductsFromDB,
+} = require("../helpers/demos/productsGetFromDB");
 const productsIterating = require("../helpers/demos/grc_startScraping");
 const insertToDB = require("../helpers/demos/insertToDB");
 const sendErrorEmail = require("../helpers/emailOnScrapingError");
@@ -33,18 +37,26 @@ router.get("/scrapping", async (req, res) => {
       insertToDB(type, products);
       res.status(200).json(products);
     } else {
-      res
-        .status(400)
-        .json({ errMessage: "Zajte správne parametre pre scrapovanie." });
+      res.status(400).send("Zajte správne parametre pre scrapovanie.");
     }
   } catch (err) {
     sendErrorEmail("Démos", err);
   }
 });
 
-router.get("/products", async (req, res) => {
-  const products = await productsGetFromDB();
-  res.json(products);
+router.get("/products/:type", async (req, res) => {
+  if (req.params.type === "all") {
+    const products = await getAllProductsFromDB();
+    res.status(200).json(products);
+  } else if (req.params.type === "10") {
+    const products = await get10thicknessProductsFromDB();
+    res.status(200).json(products);
+  } else if (req.params.type === "18") {
+    const products = await get18thicknessProductsFromDB();
+    res.status(200).json(products);
+  } else {
+    res.status(400).send("Nesprávny formát URL");
+  }
 });
 
 module.exports = router;

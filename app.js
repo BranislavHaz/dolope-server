@@ -1,10 +1,12 @@
 const express = require("express");
+const authMiddleware = require("./middlewares/authMiddleware");
 const app = express();
 const demosRouter = require("./routes/demos");
 const nabykovRouter = require("./routes/nabykov");
 const testRouter = require("./routes/test");
 require("dotenv").config();
 
+//app.use(authMiddleware);
 app.use(express.json());
 app.use("/demos", demosRouter);
 app.use("/nabykov", nabykovRouter);
