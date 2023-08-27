@@ -11,7 +11,7 @@ const insertProductsToDB = async (product) => {
   if (existingProducts.rows.length === 0) {
     // Vloženie nového produktu
     await pool.query({
-      text: `INSERT INTO products_demos(id, title, id_manufacturer, name, label, thickness, price_with_VAT, availability, url) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      text: `INSERT INTO products_demos(id, title, id_manufacturer, name, label, thickness, price_with_VAT, availability, url, manufacturer, category) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       values: [
         product.id,
         product.title,
@@ -22,6 +22,8 @@ const insertProductsToDB = async (product) => {
         product.price,
         product.availability,
         product.url,
+        product.manufacturer,
+        product.category,
       ],
     });
   } else {

@@ -7,7 +7,9 @@ const {
   setSelector,
 } = require("../../variables/demosSelectors");
 
-const scrapeProducts = async ($) => {
+const scrapeProducts = async ($, brand, decorCategory) => {
+  const manufacturer = brand === "egger" ? "Egger" : "Kronospan";
+  const category = decorCategory;
   const scrappedProducts = [];
 
   $(productsListSelector).each((index, element) => {
@@ -41,10 +43,12 @@ const scrapeProducts = async ($) => {
       const product = {
         id,
         title,
+        manufacturer,
         idManufacturer,
         name,
         label,
         thickness,
+        category,
         price,
         availability,
         url,
