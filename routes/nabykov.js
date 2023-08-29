@@ -1,13 +1,14 @@
 const express = require("express");
-const sendErrorEmail = require("../helpers/emailOnScrapingError");
 let router = express.Router();
 const app = express();
 
-//const startScrapping = require("../helpers/nabykov/startScrapping");
-const startScraping = require("../helpers/nabykov/grc_startScraping");
-const extractParamsFromTitle = require("../helpers/nabykov/grc_extractParamsFromTitle");
-const productsGetFromDB = require("../helpers/nabykov/productsGetFromDB");
+const startScraping = require("../helpers/nabykov/startScraping");
+const extractParamsFromTitle = require("../helpers/nabykov/extractParamsFromTitle");
+const { getAllProducts } = require("../helpers/nabykov/getFromDB");
 const convertEURToCZK = require("../helpers/convertEURToCZK");
+const insertToDB = require("../helpers/nabykov/insertToDB");
+const sendErrorEmail = require("../helpers/emailOnScrapingError");
+const insertStatusToDB = require("../helpers/insertStatusToDB");
 
 app.use(express.json());
 
@@ -15,33 +16,26 @@ router.get("/", (req, res) => {
   res.status(200).json({ message: "Nabykov API" });
 });
 
-//
-
-router.get("/mail", async (req, res) => {
-  sendErrorEmail("Demos");
-  res.json({ Message: "Hello" });
-});
-//
-
 router.get("/scrape", async (req, res) => {
-  await startScrapping();
-  await sendErrorEmail("Demos");
-  res.status(200).json({ message: "Nabykov scrapping is done..." });
-});
-
-router.get("/scrapping", async (req, res) => {
-  const products = await startScraping();
-  const productsWithCZKCurrency = await convertEURToCZK(products);
-  const productsWithParams = await extractParamsFromTitle(
-    productsWithCZKCurrency
-  );
-  res.status(200).json(productsWithParams);
-  //await sendErrorEmail("Demos");
-  //res.status(200).json({ message: "Nabykov scrapping is done..." });
+  try {
+    const products = await startScraping();
+    const productsWithCZKCurrency = await convertEURToCZK(products);
+    const productsWithParams = await extractParamsFromTitle(
+      productsWithCZKCurrency
+    );
+    await insertToDB(productsWithParams);
+    await insertStatusToDB("nabykov", "products");
+    console.log("Všetko prebehlo úspešne!");
+    res.status(200).json(productsWithParams);
+  } catch (err) {
+    await sendErrorEmail("Nabykov", err);
+    console.log("Ojoj, niečo sa porobilo!" + err);
+    res.status(400).send("Niečo je zle." + err);
+  }
 });
 
 router.get("/products", async (req, res) => {
-  const products = await productsGetFromDB();
+  const products = await getAllProducts();
   res.json(products);
 });
 

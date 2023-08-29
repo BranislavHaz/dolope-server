@@ -27,8 +27,6 @@ const addIDs = async ($, products) => {
     }
   }
 
-  console.log(products);
-
   return products;
 };
 

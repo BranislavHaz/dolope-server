@@ -2,17 +2,16 @@ const express = require("express");
 let router = express.Router();
 const app = express();
 
-const startScraping = require("../helpers/demos/grc_startScraping");
-//const startScrapping = require("../helpers/demos/startScrapping");
+const startScraping = require("../helpers/demos/startScraping");
 const {
   getAllProductsFromDB,
   get10thicknessProductsFromDB,
   get18thicknessProductsFromDB,
-} = require("../helpers/demos/productsGetFromDB");
-//const productsIterating = require("../helpers/demos/grc_startScraping");
+} = require("../helpers/demos/getFromDB");
 const convertEURToCZK = require("../helpers/convertEURToCZK");
 const insertToDB = require("../helpers/demos/insertToDB");
 const sendErrorEmail = require("../helpers/emailOnScrapingError");
+const insertStatusToDB = require("../helpers/insertStatusToDB");
 
 app.use(express.json());
 
@@ -21,28 +20,36 @@ router.get("/", (req, res) => {
 });
 
 router.get("/scrape", async (req, res) => {
-  await startScrapping();
-  res.status(200).json({ message: "everything is right" });
-});
-
-router.get("/scrapping", async (req, res) => {
   try {
     const manufacturer = req.query.manufacturer;
     const type = req.query.type;
 
     if (
       (manufacturer === "egger" || manufacturer === "krono") &&
-      (type === "products" || type === "translations")
+      type === "products"
     ) {
       const products = await startScraping(manufacturer, type);
       const productsWithCZKCurrency = await convertEURToCZK(products);
-      insertToDB(type, productsWithCZKCurrency);
+      await insertToDB(type, productsWithCZKCurrency);
+      await insertStatusToDB("demos", type, manufacturer);
+      console.log("Všetko prebehlo úspešne!");
       res.status(200).json(productsWithCZKCurrency);
+    } else if (
+      (manufacturer === "egger" || manufacturer === "krono") &&
+      type === "translations"
+    ) {
+      const products = await startScraping(manufacturer, type);
+      await insertToDB(type, products);
+      await insertStatusToDB("demos", type, manufacturer);
+      console.log("Všetko prebehlo úspešne!");
+      res.status(200).json(products);
     } else {
       res.status(400).send("Zajte správne parametre pre scrapovanie.");
     }
   } catch (err) {
-    sendErrorEmail("Démos", err);
+    await sendErrorEmail("Démos", err);
+    console.log("Ojoj, niečo sa porobilo!" + err);
+    res.status(400).send("Niečo je zle." + err);
   }
 });
 

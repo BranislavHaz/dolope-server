@@ -3,17 +3,21 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const app = express();
 const demosRouter = require("./routes/demos");
 const nabykovRouter = require("./routes/nabykov");
-const testRouter = require("./routes/test");
+const checkScrappingStatus = require("./helpers/checkScrappingStatus");
 require("dotenv").config();
 
-//app.use(authMiddleware);
+app.use(authMiddleware);
 app.use(express.json());
 app.use("/demos", demosRouter);
 app.use("/nabykov", nabykovRouter);
-app.use("/test", testRouter);
 
 app.get("/", (req, res) => {
   res.send("Dolope API");
+});
+
+app.get("/check-status", async (req, res) => {
+  const status = await checkScrappingStatus();
+  res.status(200).send(status);
 });
 
 app.listen(8080, () => {

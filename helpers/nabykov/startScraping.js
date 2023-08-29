@@ -1,6 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const scrapeProducts = require("./grc_scrapeProducts");
+const scrapeProducts = require("./scrapeProducts");
 
 const { pageNavSelector } = require("../../variables/nabykovSelectors");
 

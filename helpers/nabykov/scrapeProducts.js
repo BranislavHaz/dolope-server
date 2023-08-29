@@ -5,7 +5,7 @@ const {
   availabilitySelector,
   urlSelector,
 } = require("../../variables/nabykovSelectors");
-const addIDs = require("./grc_addIDs");
+const addIDs = require("./addIDs");
 
 const scrapeProducts = async ($) => {
   const scrappedProducts = [];

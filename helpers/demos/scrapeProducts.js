@@ -21,7 +21,6 @@ const scrapeProducts = async ($, brand, decorCategory) => {
       .trim()
       .replace(/^(\S+ \S+ \S+) BU /, "$1 ");
 
-    //const title = el.find(titleSelector).text().trim();
     const thicknessMatch = title.match(/\/(\d+(\,\d+)?)$/);
     const thickness = thicknessMatch
       ? Number(thicknessMatch[1].replace(",", "."))

@@ -1,8 +1,8 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const { lastPageSelector } = require("../../variables/demosSelectors");
-const scrapeProducts = require("./grc_scrapeProducts");
-const scrapeTranslations = require("./grc_scrapeTranslations");
+const scrapeProducts = require("./scrapeProducts");
+const scrapeTranslations = require("./scrapeTranslations");
 const {
   DEMOS_EGGER_URL_CZ,
   DEMOS_EGGER_URLS_SK,
@@ -63,7 +63,7 @@ const startScraping = async (manufacturer, type) => {
     const url = await getURL(manufacturer, type);
     const products = [];
 
-    const { data } = await axios.get(url + 1, cookies);
+    const { data } = await axios.get(url + 1, axiosSet);
     const $ = cheerio.load(data);
 
     const lastPage =
@@ -71,7 +71,7 @@ const startScraping = async (manufacturer, type) => {
 
     for (let page = 1; page <= lastPage; page++) {
       console.log("Začínam scrapovať " + page + " stranu.");
-      const { data } = await axios.get(url + page, cookies);
+      const { data } = await axios.get(url + page, axiosSet);
       const $ = cheerio.load(data);
       const scrappedProducts = await scrapeTranslations($);
       products.push(...scrappedProducts);
