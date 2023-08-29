@@ -9,7 +9,8 @@ const {
   get10thicknessProductsFromDB,
   get18thicknessProductsFromDB,
 } = require("../helpers/demos/productsGetFromDB");
-const productsIterating = require("../helpers/demos/grc_startScraping");
+//const productsIterating = require("../helpers/demos/grc_startScraping");
+const convertEURToCZK = require("../helpers/convertEURToCZK");
 const insertToDB = require("../helpers/demos/insertToDB");
 const sendErrorEmail = require("../helpers/emailOnScrapingError");
 
@@ -34,8 +35,9 @@ router.get("/scrapping", async (req, res) => {
       (type === "products" || type === "translations")
     ) {
       const products = await startScraping(manufacturer, type);
-      insertToDB(type, products);
-      res.status(200).json(products);
+      const productsWithCZKCurrency = await convertEURToCZK(products);
+      insertToDB(type, productsWithCZKCurrency);
+      res.status(200).json(productsWithCZKCurrency);
     } else {
       res.status(400).send("Zajte správne parametre pre scrapovanie.");
     }

@@ -28,7 +28,7 @@ const getURL = async (manufacturer, type) => {
   return undefined;
 };
 
-const cookies = {
+const axiosSet = {
   withCredentials: true,
   headers: {
     Cookie: "productListByCategoryCount=48",
@@ -43,7 +43,7 @@ const startScraping = async (manufacturer, type) => {
     for (let key in urls) {
       console.log("Kľúč:", key);
 
-      const { data } = await axios.get(urls[key] + 1, cookies);
+      const { data } = await axios.get(urls[key] + 1, axiosSet);
       const $ = cheerio.load(data);
 
       const lastPage =
@@ -51,7 +51,7 @@ const startScraping = async (manufacturer, type) => {
 
       for (let page = 1; page <= lastPage; page++) {
         console.log("Začínam scrapovať " + page + " stranu.");
-        const { data } = await axios.get(urls[key] + page, cookies);
+        const { data } = await axios.get(urls[key] + page, axiosSet);
         const $ = cheerio.load(data);
         const scrappedProducts = await scrapeProducts($, manufacturer, key);
         products.push(...scrappedProducts);
