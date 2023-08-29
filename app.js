@@ -6,16 +6,15 @@ const nabykovRouter = require("./routes/nabykov");
 const checkScrappingStatus = require("./helpers/checkScrappingStatus");
 require("dotenv").config();
 
-app.use(authMiddleware);
 app.use(express.json());
-app.use("/demos", demosRouter);
-app.use("/nabykov", nabykovRouter);
+app.use("/demos", authMiddleware, demosRouter);
+app.use("/nabykov", authMiddleware, nabykovRouter);
 
 app.get("/", (req, res) => {
   res.send("Dolope API");
 });
 
-app.get("/check-status", async (req, res) => {
+app.get("/check-status", authMiddleware, async (req, res) => {
   const status = await checkScrappingStatus();
   res.status(200).send(status);
 });
