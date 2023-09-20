@@ -57,10 +57,10 @@ router.get("/products/:type", async (req, res) => {
   if (req.params.type === "all") {
     const products = await getAllProductsFromDB();
     res.status(200).json(products);
-  } else if (req.params.type === "10") {
+  } else if (req.params.type === "thickness10") {
     const products = await get10thicknessProductsFromDB();
     res.status(200).json(products);
-  } else if (req.params.type === "18") {
+  } else if (req.params.type === "thickness18") {
     const products = await get18thicknessProductsFromDB();
     res.status(200).json(products);
   } else {
