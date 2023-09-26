@@ -7,6 +7,14 @@ const getParamsFromTitle = async (title) => {
     "šampaň",
   ];
 
+  const colorsMap = {
+    striebro: "silver",
+    "biela lesklá": "white",
+    "čierna matná": "black",
+    nerez: "stainless steel",
+    šampaň: "champagne",
+  };
+
   const categoryKeywords = [
     "brzda",
     "dekoračný profil",
@@ -19,6 +27,19 @@ const getParamsFromTitle = async (title) => {
     "tlmič",
     "úchyt",
   ];
+
+  const categoryMap = {
+    brzda: "break",
+    "dekoračný profil": "decorative profile",
+    "h-profil": "h-profile",
+    koľajnica: "rail",
+    koliesko: "wheel",
+    madlo: "handle",
+    rám: "frame",
+    tesnenie: "seal",
+    tlmič: "silencer",
+    úchyt: "grip",
+  };
 
   const railsNumberKeywords = ["jednoradová", "dvojradová"];
 
@@ -36,21 +57,21 @@ const getParamsFromTitle = async (title) => {
 
   for (const c of colorsKeywords) {
     if (lowercaseTitle.includes(c)) {
-      color = c;
+      color = colorsMap[c];
       break;
     }
   }
 
   for (const c of categoryKeywords) {
     if (lowercaseTitle.includes(c)) {
-      category = c;
+      category = categoryMap[c];
       break;
     }
   }
 
   for (const t of thicknessKeywords) {
     if (lowercaseTitle.includes(t)) {
-      thickness = t;
+      thickness = t === "hrubý" ? "wide" : "narrow";
       break;
     }
   }
@@ -75,14 +96,14 @@ const getParamsFromTitle = async (title) => {
     lowercaseTitle.includes("vrchné") ||
     lowercaseTitle.includes("vrchnej")
   ) {
-    position = "vrch";
+    position = "top";
   } else if (
     lowercaseTitle.includes("spodný") ||
     lowercaseTitle.includes("spodná") ||
     lowercaseTitle.includes("spodné") ||
     lowercaseTitle.includes("spodnej")
   ) {
-    position = "spodok";
+    position = "bottom";
   }
 
   return {
