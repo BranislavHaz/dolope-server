@@ -1,8 +1,6 @@
 const express = require("express");
 let router = express.Router();
 const app = express();
-const moment = require("moment-timezone");
-moment().tz("Europe/Bratislava").format();
 
 const startScraping = require("../helpers/nabykov/startScraping");
 const extractParamsFromTitle = require("../helpers/nabykov/extractParamsFromTitle");
@@ -19,7 +17,6 @@ router.get("/", (req, res) => {
 });
 
 router.get("/scrape", async (req, res) => {
-  const now = moment().format();
   try {
     const products = await startScraping();
     const productsWithCZKCurrency = await convertEURToCZK(products);
@@ -28,11 +25,11 @@ router.get("/scrape", async (req, res) => {
     );
     await insertToDB(productsWithParams);
     await insertStatusToDB("nabykov", "products");
-    console.log("Všetko prebehlo úspešne! " + now);
+    console.log("Všetko prebehlo úspešne!");
     res.status(200).json(productsWithParams);
   } catch (err) {
     await sendErrorEmail("Nabykov", err);
-    console.log("Ojoj, niečo sa porobilo! " + now + " " + err);
+    console.log("Ojoj, niečo sa porobilo!" + err);
     res.status(400).send("Niečo je zle." + err);
   }
 });

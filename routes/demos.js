@@ -1,8 +1,6 @@
 const express = require("express");
 let router = express.Router();
 const app = express();
-const moment = require("moment-timezone");
-moment().tz("Europe/Bratislava").format();
 
 const startScraping = require("../helpers/demos/startScraping");
 const {
@@ -22,7 +20,6 @@ router.get("/", (req, res) => {
 });
 
 router.get("/scrape", async (req, res) => {
-  const now = moment().format();
   try {
     const manufacturer = req.query.manufacturer;
     const type = req.query.type;
@@ -33,25 +30,25 @@ router.get("/scrape", async (req, res) => {
     ) {
       const products = await startScraping(manufacturer, type);
       const productsWithCZKCurrency = await convertEURToCZK(products);
-      await insertToDB(type, productsWithCZKCurrency);
+      await insertToDB(manufacturer, type, productsWithCZKCurrency);
       await insertStatusToDB("demos", type, manufacturer);
-      console.log("Všetko prebehlo úspešne! " + now);
+      console.log("Všetko prebehlo úspešne!");
       res.status(200).json(productsWithCZKCurrency);
     } else if (
       (manufacturer === "egger" || manufacturer === "krono") &&
       type === "translations"
     ) {
       const products = await startScraping(manufacturer, type);
-      await insertToDB(type, products);
+      await insertToDB(manufacturer, type, products);
       await insertStatusToDB("demos", type, manufacturer);
-      console.log("Všetko prebehlo úspešne! " + now);
+      console.log("Všetko prebehlo úspešne!");
       res.status(200).json(products);
     } else {
       res.status(400).send("Zajte správne parametre pre scrapovanie.");
     }
   } catch (err) {
     await sendErrorEmail("Démos", err);
-    console.log("Ojoj, niečo sa porobilo! " + now + " " + err);
+    console.log("Ojoj, niečo sa porobilo!" + err);
     res.status(400).send("Niečo je zle." + err);
   }
 });
