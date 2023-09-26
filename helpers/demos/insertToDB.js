@@ -43,10 +43,11 @@ const insertTranslationsToDB = async (product) => {
   });
 };
 
-const insertToDB = async (type, products) => {
+const insertToDB = async (manufacturer, type, products) => {
   if (type === "products") {
     await pool.query({
-      text: "UPDATE products_demos SET availability = false",
+      text: "UPDATE products_demos SET availability = false WHERE manufacturer = $1",
+      values: [manufacturer],
     });
     for (const product of products) {
       await insertProductsToDB(product);
