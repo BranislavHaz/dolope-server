@@ -47,7 +47,10 @@ const insertToDB = async (manufacturer, type, products) => {
   if (type === "products") {
     const availability = false;
     const capitalizedManufacturer =
-      manufacturer.charAt(0).toUpperCase() + manufacturer.slice(1);
+      manufacturer === "egger" ? "Egger" : "Kronospan";
+
+    console.log("manufacturer: " + manufacturer);
+    console.log("capitalizedManufacturer: " + capitalizedManufacturer);
 
     await pool.query({
       text: "UPDATE products_demos SET availability = $1 WHERE manufacturer = $2",
