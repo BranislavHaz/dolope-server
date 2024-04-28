@@ -15,7 +15,8 @@ const convertEURToCZK = async (products) => {
   await Promise.all(
     products.map(async (product) => {
       const exchangePrice = product.price * exchangeRate;
-      product.price = Math.ceil(exchangePrice);
+      // 5.796 sú m2 jednej tabule
+      product.price = Math.ceil(exchangePrice / 5.796);
     })
   );
   return products;
