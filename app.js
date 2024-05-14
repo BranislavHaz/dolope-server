@@ -4,6 +4,7 @@ const app = express();
 const demosRouter = require("./routes/demos");
 const nabykovRouter = require("./routes/nabykov");
 const agcRouter = require("./routes/agc");
+const otherRouter = require("./routes/other");
 
 const checkScrappingStatus = require("./helpers/checkScrappingStatus");
 require("dotenv").config();
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use("/demos", authMiddleware, demosRouter);
 app.use("/nabykov", authMiddleware, nabykovRouter);
 app.use("/agc", authMiddleware, agcRouter);
+app.use("/other", authMiddleware, otherRouter);
 
 app.get("/", (req, res) => {
   res.send("Dolope API");
