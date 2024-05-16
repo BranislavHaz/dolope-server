@@ -41,8 +41,6 @@ const startScraping = async (manufacturer, type) => {
     const products = [];
 
     for (let key in urls) {
-      console.log("Kľúč:", key);
-
       const { data } = await axios.get(urls[key] + 1, axiosSet);
       const $ = cheerio.load(data);
 
