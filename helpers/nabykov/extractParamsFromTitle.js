@@ -119,7 +119,6 @@ const getParamsFromTitle = async (title) => {
 const extractParamsFromTitle = async (products) =>
   await Promise.all(
     products.map(async (product) => {
-      console.log(product);
       const title = product.title;
       const params = await getParamsFromTitle(title);
 
