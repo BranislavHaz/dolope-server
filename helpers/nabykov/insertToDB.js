@@ -2,6 +2,7 @@
 const pool = require("../../connectDB");
 
 const insertProductsToDB = async (product) => {
+  console.log("Začínam insert do DB");
   // Kontrola, či produkt s daným ID už existuje
   const existingProducts = await pool.query({
     text: `SELECT * FROM products_nabykov WHERE id = $1`,
