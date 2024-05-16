@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 router.get("/scrape", async (req, res) => {
   try {
     const products = await startScraping();
-    const productsWithCZKCurrency = await convertEURToCZK(products);
+    const productsWithCZKCurrency = await convertEURToCZK(products, "nabykov");
     const productsWithParams = await extractParamsFromTitle(
       productsWithCZKCurrency
     );

@@ -29,7 +29,7 @@ router.get("/scrape", async (req, res) => {
       type === "products"
     ) {
       const products = await startScraping(manufacturer, type);
-      const productsWithCZKCurrency = await convertEURToCZK(products);
+      const productsWithCZKCurrency = await convertEURToCZK(products, "demos");
       await insertToDB(manufacturer, type, productsWithCZKCurrency);
       await insertStatusToDB("demos", type, manufacturer);
       console.log("Všetko prebehlo úspešne!");

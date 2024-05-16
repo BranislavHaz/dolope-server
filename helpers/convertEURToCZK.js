@@ -7,7 +7,7 @@ const customRound = async (number) => {
   return rounded;
 };
 
-const convertEURToCZK = async (products) => {
+const convertEURToCZK = async (products, manufacturer) => {
   const response = await axios.get(url);
   const exchangeRateEUR = await customRound(response.data.kurzy.EUR.dev_stred);
   const exchangeRate = exchangeRateEUR ? exchangeRateEUR : 26;
@@ -15,8 +15,20 @@ const convertEURToCZK = async (products) => {
   await Promise.all(
     products.map(async (product) => {
       const exchangePrice = product.price * exchangeRate;
-      // 5.796 sú m2 jednej tabule
-      product.price = Math.ceil(exchangePrice / 5.796);
+
+      if (product.id === 2159933) {
+        console.log("Scraped price: " + product.price);
+        console.log("exchangeRateEUR: " + exchangeRateEUR);
+        console.log("exchangeRate: " + exchangeRate);
+        console.log("exchangePrice: " + exchangePrice);
+      }
+
+      if (manufacturer === "demos") {
+        // 5.796 sú m2 jednej tabule
+        product.price = Math.ceil(exchangePrice / 5.796);
+      } else {
+        product.price = exchangePrice;
+      }
     })
   );
   return products;
