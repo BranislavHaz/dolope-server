@@ -13,11 +13,7 @@ const checkScrappingStatus = async () => {
 
     const row = rows[0];
 
-    console.log("Today: " + today);
-    console.log("Tomorrow: " + tomorrow);
-
     for (const column in row) {
-      console.log("From DB " + column + ": " + moment(row[column]).format());
       if (column !== "id") {
         const timestamp = moment(row[column]).format();
         if (today > timestamp || timestamp > tomorrow) {
