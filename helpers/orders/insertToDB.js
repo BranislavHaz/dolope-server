@@ -5,7 +5,7 @@ const insertOrderToDB = async (orderData) => {
   const order = await checkOrderData(orderData);
 
   const result = await pool.query({
-    text: `INSERT INTO orders(name, surname, mail, phone, city, zip, info, state, timestamp) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+    text: `INSERT INTO orders(name, surname, mail, phone, city, zip, info, state, timestamp, price, currency) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
     values: [
       order.name,
       order.surname,
@@ -16,6 +16,8 @@ const insertOrderToDB = async (orderData) => {
       order.info,
       order.state,
       order.timestamp,
+      order.price,
+      order.currency,
     ],
   });
 
