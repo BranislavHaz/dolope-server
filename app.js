@@ -36,7 +36,7 @@ app.use("/demos", authMiddleware, demosRouter);
 app.use("/nabykov", authMiddleware, nabykovRouter);
 app.use("/agc", authMiddleware, agcRouter);
 app.use("/other", authMiddleware, otherRouter);
-app.use("/orders", ordersRouter); // authMiddleware na konkrétnej route
+app.use("/orders", ordersRouter);
 
 app.get("/", (req, res) => {
   res.send("Dolope API");

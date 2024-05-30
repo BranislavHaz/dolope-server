@@ -1,5 +1,4 @@
 const express = require("express");
-const authMiddleware = require("../middlewares/authMiddleware");
 let router = express.Router();
 const app = express();
 
@@ -13,7 +12,7 @@ router.get("/", (req, res) => {
   res.status(200).json({ message: "ORDER API" });
 });
 
-router.post("/send-order", authMiddleware, async (req, res) => {
+router.post("/send-order", async (req, res) => {
   try {
     const orderData = req.body;
     const orderId = await insertOrderToDB(orderData);
