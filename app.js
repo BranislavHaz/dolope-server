@@ -15,6 +15,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:8080",
   "https://www.dolope.cz",
+  "https://konfigurator.dolope.cz",
   "https://dolope-6771.rostiapp.cz",
 ];
 
